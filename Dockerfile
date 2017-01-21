@@ -1,12 +1,8 @@
-# Dockerfile - alpine-fat
-# https://github.com/openresty/docker-openresty
-#
-# This is an alpine-based build that keeps some build-related
-# packages, has perl installed for opm, and includes luarocks.
-
 FROM jrottenberg/ffmpeg:3.2-alpine
 
 MAINTAINER qy liang <qy_liang@yahoo.com>
+
+WORKDIR /
 
 # Docker Build Arguments
 ARG RESTY_VERSION="1.11.2.2"
@@ -45,6 +41,7 @@ ARG RESTY_CONFIG_OPTIONS="\
     --with-stream_ssl_module \
     --with-threads \
     --add-module=/tmp/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} \
+    --conf-path=/etc/nginx/nginx.conf \
     "
 
 # These are not intended to be user-specified
@@ -96,6 +93,7 @@ RUN \
         openssl-${RESTY_OPENSSL_VERSION}.tar.gz \
         openresty-${RESTY_VERSION}.tar.gz openresty-${RESTY_VERSION} \
         pcre-${RESTY_PCRE_VERSION}.tar.gz pcre-${RESTY_PCRE_VERSION} \
+        nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}.tar.gz nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} \
     && curl -fSL http://luarocks.org/releases/luarocks-${RESTY_LUAROCKS_VERSION}.tar.gz -o luarocks-${RESTY_LUAROCKS_VERSION}.tar.gz \
     && tar xzf luarocks-${RESTY_LUAROCKS_VERSION}.tar.gz \
     && cd luarocks-${RESTY_LUAROCKS_VERSION} \
